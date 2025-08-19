@@ -1,0 +1,100 @@
+# Centralized Configuration for LLM Inference Testing
+# This file controls all aspects of the inference pipeline
+
+# Model configurations
+models:
+  llama-70b:
+    path: "/home/ubuntu/AI-Power-Finetune3/models/llama-3.1-70b-Instruct"
+    type: "llama"
+    tensor_parallel_size: 8
+    max_memory_per_gpu: "80GB"
+    default_sampling:
+      temperature: 0.1
+      top_p: 0.9
+      max_tokens: 512
+    
+  llama-8b:
+    path: "/path/to/llama-3.1-8b-Instruct"
+    type: "llama"
+    tensor_parallel_size: 1
+    max_memory_per_gpu: "24GB"
+    default_sampling:
+      temperature: 0.1
+      top_p: 0.9
+      max_tokens: 512
+      
+  mistral-7b:
+    path: "/path/to/mistral-7b-instruct"
+    type: "mistral"
+    tensor_parallel_size: 1
+    max_memory_per_gpu: "24GB"
+    default_sampling:
+      temperature: 0.1
+      top_p: 0.95
+      max_tokens: 512
+
+# Dataset configurations
+datasets:
+  quick_test:
+    - name: "sst2"
+      samples: 100
+      metrics: ["accuracy", "valid_format_rate"]
+    - name: "bool_logic"
+      samples: 100
+      metrics: ["accuracy", "valid_format_rate"]
+      
+  full_benchmark:
+    - name: "sst2"
+      samples: 1000
+      metrics: ["accuracy", "valid_format_rate", "latency"]
+    - name: "mmlu"
+      samples: 500
+      subset: "all"
+      metrics: ["accuracy", "valid_format_rate"]
+    - name: "bool_logic" 
+      samples: 500
+      metrics: ["accuracy", "valid_format_rate"]
+    - name: "math"
+      subset: "arithmetic__add_or_sub"
+      samples: 200
+      metrics: ["accuracy", "valid_format_rate"]
+    - name: "valid_parentheses"
+      samples: 300
+      metrics: ["accuracy", "valid_format_rate"]
+
+  translation_test:
+    - name: "un_multi"
+      subset: "en-fr"
+      samples: 100
+      metrics: ["bleu", "valid_format_rate"]
+    - name: "iwslt2017"
+      subset: "en-de"
+      samples: 100
+      metrics: ["bleu", "valid_format_rate"]
+
+# Server configurations
+server:
+  host: "0.0.0.0"
+  port: 8000
+  timeout: 600
+  max_retries: 3
+  batch_size: 32
+  
+# Inference configurations  
+inference:
+  modes: ["sequential", "parallel"]
+  save_interval: 100
+  use_sampled_data: true
+  output_dir: "results"
+  
+# Performance settings
+performance:
+  pytorch_cuda_alloc_conf: "max_split_size_mb:512"
+  tokenizers_parallelism: false
+  num_workers: 4
+  
+# Logging
+logging:
+  level: "INFO"
+  file: "inference.log"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"

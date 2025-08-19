@@ -1,0 +1,100 @@
+name: llama-inference
+channels:
+  - pytorch
+  - nvidia
+  - conda-forge
+  - defaults
+
+dependencies:
+  # Python version
+  - python=3.10
+  
+  # Core ML frameworks from conda
+  - pytorch>=2.5.0
+  - pytorch-cuda=12.1  # CUDA 12.1 support
+  - torchvision
+  - torchaudio
+  
+  # Scientific computing
+  - numpy>=1.26
+  - pandas>=1.3
+  - scipy>=1.14
+  - scikit-learn>=0.23
+  
+  # Data processing
+  - h5py>=3.12
+  - pyarrow>=18.0
+  - openpyxl>=3.1
+  
+  # Visualization
+  - matplotlib>=3.8
+  - seaborn>=0.13
+  
+  # Development tools
+  - ipython>=7.31
+  - jupyter
+  - jupyterlab
+  
+  # Utilities
+  - tqdm>=4.66
+  - pyyaml>=6.0
+  - requests>=2.32
+  - psutil>=5.9
+  
+  # Build tools
+  - pip
+  - setuptools
+  - wheel
+  
+  # Pip dependencies (not available in conda or need specific versions)
+  - pip:
+      # vLLM and related
+      - vllm>=0.6.4
+      - xformers  # Required by vLLM
+      - flash-attn  # Optional but recommended for vLLM
+      
+      # Transformers ecosystem
+      - transformers>=4.46.0
+      - accelerate>=0.25.0
+      - tokenizers>=0.20.0
+      - safetensors>=0.4.5
+      - sentencepiece>=0.2.0
+      
+      # FastAPI server
+      - fastapi>=0.115.0
+      - uvicorn[standard]>=0.32.0
+      - pydantic>=2.9.0
+      - httpx>=0.27.0
+      
+      # Dataset and evaluation
+      - promptbench>=0.0.4
+      - datasets>=2.19.0
+      
+      # Additional ML tools
+      - sentence-transformers>=3.3.0
+      
+      # Monitoring
+      - prometheus-client>=0.21.0
+      - prometheus-fastapi-instrumentator>=7.0.0
+      
+      # API clients (optional)
+      - openai>=1.54.0
+      - google-generativeai>=0.4.0
+      
+      # Logging
+      - coloredlogs>=15.0
+      
+      # JSON validation
+      - jsonschema>=4.23.0
+      - typing_extensions>=4.12.0
+      
+      # Development tools (optional)
+      - black>=22.0.0
+      - flake8>=4.0.0
+      - pytest>=7.0.0
+
+variables:
+  # Environment variables for optimal performance
+  PYTORCH_CUDA_ALLOC_CONF: max_split_size_mb:512
+  CUDA_VISIBLE_DEVICES: 0,1,2,3,4,5,6,7  # Adjust based on your GPU setup
+  TOKENIZERS_PARALLELISM: false
